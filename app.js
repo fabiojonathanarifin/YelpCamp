@@ -1,26 +1,47 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
 const mongoose = require('mongoose');
-const Campground = require('./models/campground')
+const Campground = require('./models/campground');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp').
-  catch(error => handleError(error));
-
+mongoose.connect('mongodb://localhost:27017/yelp-camp');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
+//necessary for parsing req.body -- app.post
+app.use(express.urlencoded({ extended:true }))
 
 app.get('/', (req, res) => {
     res.render('home')
+});
+
+app.get('/campgrounds', async (req, res) => {
+    //.find() is used to grab the data in the server and using it on the campgrounds/index
+    const campgrounds = await Campground.find({});
+    res.render('campgrounds/index', { campgrounds })
+});
+
+// page for inputing new data into the server
+app.get('/campgrounds/new', async (req, res) => {
+    res.render('campgrounds/new')
 })
 
-app.get('/makecampground', async (req, res) => {
-    const camp = new Campground({ title: 'My Backyard', description: 'Nice place to chill' });
-    await camp.save();
-    res.send(camp)
+//adding new campground to the server and displaying it on campground
+app.post('/campgrounds', async (req, res) => {
+    // req.body.campground to grab the data, and put it into 'campground' variable
+    const campground = new Campground(req.body.campground);
+    //saving the new campground to the server
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`)
+})
+
+//showing specific place in the list
+app.get('/campgrounds/:id', async (req, res) => {
+    //requesting the data using specific id
+    const campground = await Campground.findById(req.params.id)
+    res.render('campgrounds/show', {campground})
 })
 
 app.listen(3000, () => {
