@@ -1,13 +1,17 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const ejsMate = require('ejs-mate') 
 const methodOverride = require('method-override');
 const Campground = require('./models/campground');
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp');
+mongoose.connect('mongodb://localhost:27017/yelp-camp').
+    catch(error => handleError(error));
 
 const app = express();
 
+//ejs-mate is engine for boilerplate (creating layout file in views directory)
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
