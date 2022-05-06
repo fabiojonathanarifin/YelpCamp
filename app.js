@@ -48,7 +48,7 @@ app.post('/campgrounds', async (req, res) => {
 app.get('/campgrounds/:id', async (req, res) => {
     //requesting the data using specific id
     const campground = await Campground.findById(req.params.id)
-    res.render('campgrounds/show', {campground})
+    res.render('campgrounds/show', { campground })
 })
 
 app.get('/campgrounds/:id/edit', async (req, res) => {
@@ -66,7 +66,7 @@ app.put('/campgrounds/:id', async (req,res) => {
 app.delete('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id)
-    res.redirect(`/campgrounds`)
+    res.redirect('/campgrounds')
 })
 
 app.listen(3000, () => {

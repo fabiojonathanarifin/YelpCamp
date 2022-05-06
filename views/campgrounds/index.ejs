@@ -6,11 +6,12 @@
 <% for (let campground of campgrounds){%>
     <!-- making row cards -->
     <div class="card mb-3">
+        <!-- the content of the card become horizontal instead of vertical -->
         <div class="row">
             <!-- take 1/3 part container on the left side for the picture -->
             <!-- col = coloumn, md = medium breakpoint for responsive container, 4 is 4/12, the col size -->
             <div class="col-md-4">
-                <img class="img-fluid" src="<%= campground.image %> " alt="">
+                <img class="img-fluid" src="<%= campground.image %> " alt="image of picture">
             </div>
             <!-- take 2/3 part container for the content -->
             <div class="col-md-8">
@@ -25,14 +26,4 @@
             </div>
         </div>
     </div>
-    
-    
-    <!-- <div class="card mt-3" style="width: 18rem;">
-        <img src="<%= campground.image %>" class="card-img-top" alt="Picture of <%= campground.title %> ">
-        <div class="card-body">
-          <h5 class="card-title"><%= campground.title %> </h5>
-          <p class="card-text"><%= campground.description %> </p>
-          <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">Details</a>
-        </div>
-      </div> -->
 <% }%>
