@@ -1,4 +1,4 @@
-#override p {
+p#override {
     overflow-wrap: break-word;
     color: blue;
 }
