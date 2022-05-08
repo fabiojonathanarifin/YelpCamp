@@ -21,6 +21,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended:true }))
 //to be able to use put and patch through method
 app.use(methodOverride('_method'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
     res.render('home')
@@ -77,8 +78,9 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    const { message = 'Something went wrong!', statusCode = 500} = err;
-    res.status(statusCode).send(message);
+    const { statusCode = 500 } = err;
+    if(!err.message) err.message = 'Oh no, something went wrong!'
+    res.status(statusCode).render('error', { err })
 })
 
 app.listen(3000, () => {
