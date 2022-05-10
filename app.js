@@ -3,7 +3,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
-const Joi = require ('joi')
 const { campgroundSchema } = require('./schemas.js')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override');
