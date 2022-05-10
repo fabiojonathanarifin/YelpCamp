@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const catchAsync = require('./utils/catchAsync');
+const Joi = require ('joi')
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override');
 const Campground = require('./models/campground');
@@ -16,6 +17,26 @@ const app = express();
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+
+//server side validation using Joi
+const validateCampground = (req, res, next) => {
+    const campgroundSchema = Joi.object({
+        campground: Joi.object({
+            title: Joi.string().required(),
+            price: Joi.number().required().min(0),
+            image: Joi.string().required(),
+            location: Joi.string().required(),
+            description: Joi.string().required()
+        }).required()
+    })
+    const { error } = campgroundSchema.validate(req.body);
+    if(error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
 
 //necessary for parsing req.body -- app.post
 app.use(express.urlencoded({ extended:true }))
@@ -39,8 +60,8 @@ app.get('/campgrounds/new', catchAsync(async (req, res) => {
 }))
 
 //adding new campground to the server and displaying it on campground
-app.post('/campgrounds', catchAsync(async (req, res, next) => {
-    if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
+app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) => {
+    // if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
     // req.body.campground to grab the data, and put it into 'campground' variable
     const campground = new Campground(req.body.campground);
     //saving the new campground to the server
