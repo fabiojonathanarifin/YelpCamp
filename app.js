@@ -74,7 +74,8 @@ app.post('/campgrounds', validateCampground, catchAsync(async (req, res, next) =
 //showing specific place in the list
 app.get('/campgrounds/:id', catchAsync(async (req, res) => {
     //requesting the data using specific id
-    const campground = await Campground.findById(req.params.id)
+    const campground = await Campground.findById(req.params.id).populate('reviews')
+    console.log(campground)
     res.render('campgrounds/show', { campground })
 }))
 
@@ -103,6 +104,15 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     await review.save();
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`)
+}))
+
+//the path /campgrounds/:id/rev, etc. is the url, it can be modivied; it doesn't refer to any directory or index pages
+app.delete("/campgrounds/:id/reviews/:reviewId", catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    //$pull is used to delete the review without deleting the entire campground. it will delete the one specifically with the given id
+    const campground = await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId} })
+    const review = await Review.findByIdAndDelete(reviewId)
+    res.redirect(`/campgrounds/${id}`)
 }))
 
 app.all('*', (req, res, next) => {
