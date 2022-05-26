@@ -45,7 +45,7 @@ app.use((req, res, next) => {
     //putting the flash on local variables
     res.locals.success = req.flash('success');
     //instead of directing client to the error message, redirect them to campground index and flash error
-    res.locals.error = req.error('error')
+    res.locals.error = req.flash('error')
     next();
 })
 
