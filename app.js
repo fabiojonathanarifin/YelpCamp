@@ -49,6 +49,7 @@ app.use((req, res, next) => {
     next();
 })
 
+//to integrate with the routes
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
 
