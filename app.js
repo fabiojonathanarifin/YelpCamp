@@ -6,7 +6,9 @@ const session = require('express-session')
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError')
 const methodOverride = require('method-override');
-
+const passport = require('passport');
+const LocalStrategy = require('passport-local')
+const User = require('./models/user');
 
 const campgrounds = require('./routes/campgrounds')
 const reviews = require('./routes/reviews')
@@ -38,8 +40,21 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+//session has to be before passport.session according to passport docs
 app.use(session(sessionConfig))
 app.use(flash())
+
+app.use(passport.initialize());
+//persistent login session
+app.use(passport.session());
+//authentication method is prebuilt in passpor.js
+//we can have multiple strategy at once, but currently we're only using localStrategy
+passport.use(new LocalStrategy(User.authenticate()));
+
+//store user in a session
+passport.serializeUser(User.serializeUser());
+//unstore user from a session
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     //putting the flash on local variables
@@ -47,6 +62,13 @@ app.use((req, res, next) => {
     //instead of directing client to the error message, redirect them to campground index and flash error
     res.locals.error = req.flash('error')
     next();
+})
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: 'fabiojonathan@gmail.com', username: 'fabiojonathana' })
+    //this is a convenient passport-local-mongoose method
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
 })
 
 //to integrate with the routes
