@@ -1,9 +1,12 @@
 const express = require('express')
 const router = express.Router();
 const { campgroundSchema } = require('../schemas.js')
+const { isLoggedIn } = require('../middleware');
+
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError')
 const Campground = require('../models/campground');
+
 
 //server side validation using Joi for error handling purposes
 const validateCampground = (req, res, next) => {
@@ -23,7 +26,7 @@ router.get('/', catchAsync(async (req, res) => {
 }));
 
 // page for inputing new data into the server
-router.get('/new', catchAsync(async (req, res) => {
+router.get('/new', isLoggedIn, catchAsync(async (req, res) => {
     res.render('campgrounds/new')
 }))
 
