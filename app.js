@@ -58,6 +58,10 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+    //passport input the user in req
+    //the req.user will display user infromation coming from the session
+    //we can access user wherever we want in our app
+    res.locals.currentUser = req.user;
     //putting the flash on local variables
     res.locals.success = req.flash('success');
     //instead of directing client to the error message, redirect them to campground index and flash error
