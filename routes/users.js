@@ -38,8 +38,9 @@ router.post('/login', passport.authenticate('local', {
 }), (req, res) => {
     req.flash('success', 'Welcome back!');
     //returning client to the desired destination after logging in, or if none, go to /campgrounds
+    //returnTo located in middleware.js file
     const redirectUrl = req.session.returnTo || '/campgrounds';
-    //returnTo is only used once.. it's unecessary for it to stay in the session
+    //reto stay in the seturnTo is only used once.. it's unecessary for it ssion
     delete req.session.returnTo
     //return to retunTo after logging in, or back to campground if there was no destination recorded
     res.redirect(redirectUrl);
