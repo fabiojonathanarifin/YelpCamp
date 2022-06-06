@@ -41,6 +41,7 @@ router.post('/login', passport.authenticate('local', {
     const redirectUrl = req.session.returnTo || '/campgrounds';
     //returnTo is only used once.. it's unecessary for it to stay in the session
     delete req.session.returnTo
+    //return to retunTo after logging in, or back to campground if there was no destination recorded
     res.redirect(redirectUrl);
 })
 
