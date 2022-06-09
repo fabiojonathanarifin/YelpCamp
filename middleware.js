@@ -1,7 +1,17 @@
-const { campgroundSchema } = require('./schemas.js')
+const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const ExpressError = require('./utils/ExpressError')
 const Campground = require('./models/campground')
 
+
+module.exports.validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
 
 //req,res,next is necessary because this is a middleware
 module.exports.isLoggedIn = (req, res, next) => {
