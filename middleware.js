@@ -2,7 +2,7 @@ const { campgroundSchema, reviewSchema } = require('./schemas.js')
 const ExpressError = require('./utils/ExpressError')
 const Campground = require('./models/campground')
 
-
+//server side validation using Joi for review
 module.exports.validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
     if (error) {
