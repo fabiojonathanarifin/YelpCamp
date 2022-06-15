@@ -16,12 +16,14 @@ router.route('/')
     //campgrounds.index, located in controllers campgrounds, module.exports.index
     .get(catchAsync(campgrounds.index))
     //adding new campground to the server and displaying it on campground
-    // .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground))
     // upload.single and req.file is from multer
-    .post(upload.array('image'), (req, res) => {
-        console.log(req.body, req.files);
-        res.send('IT WORKED?!')
-    })
+    //the multer upload.array run prior to the createCampground function 
+    .post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground))
+// .post(upload.array('image'), (req, res) => {
+//     console.log(req.body, req.files);
+//     res.send('IT WORKED?!')
+// })
+
 
 // page for inputing new data into the server
 router.get('/new', isLoggedIn, campgrounds.renderNewForm)

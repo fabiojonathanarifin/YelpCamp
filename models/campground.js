@@ -5,7 +5,13 @@ const Schema = mongoose.Schema;
 //schema is the model object data for the server(basically like blueprint/template)
 const CampgroundSchema = new Schema({
     title: String,
-    image: String,
+    //multiple images
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
     price: Number,
     description: String,
     location: String,

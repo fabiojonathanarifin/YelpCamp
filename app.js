@@ -63,6 +63,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+    console.log(req.session)
     //passport input the user in req
     //the req.user will display user infromation coming from the session
     //we can access user wherever we want in our app

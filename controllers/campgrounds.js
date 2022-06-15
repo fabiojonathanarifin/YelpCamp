@@ -14,10 +14,14 @@ module.exports.createCampground = async (req, res, next) => {
     // if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
     // req.body.campground to grab the data, and put it into 'campground' variable
     const campground = new Campground(req.body.campground);
+    //the multer upload.array function
+    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     //inputing user id to campground
     campground.author = req.user._id;
     //saving the new campground to the server
     await campground.save();
+    console.log(campground)
+    console.log(campground.images)
     req.flash('success', 'Successfull made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }
