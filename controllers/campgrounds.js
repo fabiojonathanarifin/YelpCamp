@@ -63,6 +63,18 @@ module.exports.updateCampground = async (req, res) => {
   const campground = await Campground.findByIdAndUpdate(id, {
     ...req.body.campground,
   });
+  //we're pushing, not overriding
+  const imgs = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
+  //We use spreads because map produce an array of array,
+  //And we don't want to push array of array into the existing array of objects
+  //Spreads is use so we push multiple seperated(spreaded) objects to the array instead of an array of objects
+  //instead of this [{url:lorem, filename:lorem}, {url:lorem, filename:lorem}]
+  //this {url:lorem, filename:lorem} then {url:lorem, filename:lorem} then {url:lorem, filename:lorem}
+  campground.images.push(...imgs);
+  await campground.save();
   req.flash("success", "Successfully updated campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
