@@ -1,4 +1,5 @@
 const Campground = require("../models/campground");
+const { cloudinary } = require("../cloudinary");
 
 module.exports.index = async (req, res) => {
   //.find() is used to grab the data in the server and using it on the campgrounds/index
@@ -78,6 +79,11 @@ module.exports.updateCampground = async (req, res) => {
   //to delete selected images
   //$pull is to pull out element from an array
   if (req.body.deleteImages) {
+    for (let filename of req.body.deleteImages) {
+      //delete files in the cloudinary
+      await cloudinary.uploader.destroy(filename);
+    }
+    //delete files in mongodb
     await campground.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
