@@ -2,16 +2,24 @@ const mongoose = require("mongoose");
 const Review = require("./review");
 const Schema = mongoose.Schema;
 
+// https://res.cloudinary.com/demo/image/upload/c_fill,h_300,w_250/e_blur:300/sample.jpg
+
+const ImageSchema = new Schema({
+  url: String,
+  filename: String,
+});
+
+//adding thumbnail into the ImageSchema as a key value after manipulating the url value, putting it to the thumbnail value
+//w_200 is setting the thumbnail width to 200 pixel - cloudinary docs
+//image transforamtion api from cloudinary would be nice!
+ImageSchema.virtual("thumbnail").get(function () {
+  return this.url.replace("/upload", "/upload/w_200");
+});
 //schema is the model object data for the server(basically like blueprint/template)
 const CampgroundSchema = new Schema({
   title: String,
   //multiple images
-  images: [
-    {
-      url: String,
-      filename: String,
-    },
-  ],
+  images: [ImageSchema],
   price: Number,
   description: String,
   location: String,
