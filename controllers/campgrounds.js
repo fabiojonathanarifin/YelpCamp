@@ -1,5 +1,8 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 
 module.exports.index = async (req, res) => {
   //.find() is used to grab the data in the server and using it on the campgrounds/index
@@ -12,6 +15,14 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
+  const geoData = await geocoder
+    .forwardGeocode({
+      query: req.body.campground.location,
+      limit: 1,
+    })
+    .send();
+  res.send(geoData.body.features[0].geometry.coordinates);
+  // res.send("OK!!");
   // if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
   // req.body.campground to grab the data, and put it into 'campground' variable
   const campground = new Campground(req.body.campground);
