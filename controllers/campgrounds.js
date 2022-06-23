@@ -21,6 +21,8 @@ module.exports.createCampground = async (req, res, next) => {
       limit: 1,
     })
     .send();
+  //features[0] beacuse features is an array
+  //'geometry' gives us GeoJSON, a common standard for geolocation
   res.send(geoData.body.features[0].geometry.coordinates);
   // res.send("OK!!");
   // if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
