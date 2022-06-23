@@ -20,6 +20,18 @@ const CampgroundSchema = new Schema({
   title: String,
   //multiple images
   images: [ImageSchema],
+  //standard geolocation model schema from mongoose
+  geometry: {
+    type: {
+      type: String,
+      enum: ["Point"],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  },
   price: Number,
   description: String,
   location: String,

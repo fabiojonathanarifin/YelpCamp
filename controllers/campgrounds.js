@@ -21,13 +21,13 @@ module.exports.createCampground = async (req, res, next) => {
       limit: 1,
     })
     .send();
-  //features[0] beacuse features is an array
-  //'geometry' gives us GeoJSON, a common standard for geolocation
-  res.send(geoData.body.features[0].geometry.coordinates);
   // res.send("OK!!");
   // if(!req.body.campground) throw new ExpressError('Invalid campground data', 400)
   // req.body.campground to grab the data, and put it into 'campground' variable
   const campground = new Campground(req.body.campground);
+  //features[0] beacuse features is an array
+  //'geometry' gives us GeoJSON, a common standard
+  campground.geometry = geoData.body.features[0].geometry;
   //the multer upload.array function
   campground.images = req.files.map((f) => ({
     url: f.path,
@@ -37,6 +37,7 @@ module.exports.createCampground = async (req, res, next) => {
   campground.author = req.user._id;
   //saving the new campground to the server
   await campground.save();
+  console.log(campground);
   req.flash("success", "Successfull made a new campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
