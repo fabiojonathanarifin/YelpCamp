@@ -117,8 +117,8 @@
 <!-- this is necessary so that EJS can read it -->
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-  //inputing the campground file (especially coordinates) into a variable for showPageMap to use the coordinate
-  const campground = < % -JSON.stringify(campground) % > ;
+  //take
+  const campground = <%-JSON.stringify(campground)%>;
 </script>
 
 
