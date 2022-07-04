@@ -15,36 +15,46 @@ const ImageSchema = new Schema({
 ImageSchema.virtual("thumbnail").get(function () {
   return this.url.replace("/upload", "/upload/w_200");
 });
+
+//mongoose pattern to create virtual properties as an object
+const opts = { toJSON: { virtuals: true } };
 //schema is the model object data for the server(basically like blueprint/template)
-const CampgroundSchema = new Schema({
-  title: String,
-  //multiple images
-  images: [ImageSchema],
-  //standard geolocation model schema from mongoose
-  geometry: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true,
+const CampgroundSchema = new Schema(
+  {
+    title: String,
+    //multiple images
+    images: [ImageSchema],
+    //standard geolocation model schema from mongoose
+    geometry: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
-    coordinates: {
-      type: [Number],
-      required: true,
-    },
-  },
-  price: Number,
-  description: String,
-  location: String,
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  reviews: [
-    {
+    price: Number,
+    description: String,
+    location: String,
+    author: {
       type: Schema.Types.ObjectId,
-      ref: "Review",
+      ref: "User",
     },
-  ],
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+  },
+  opts
+);
+
+CampgroundSchema.virtual("properties.popUpMarkup").get(function () {
+  return "I AM POPUP TEXT!!!";
 });
 
 // mongoose middleware, it will be engaged when a campground is deleted
