@@ -9,3 +9,13 @@ To access server:
 -type mongo
 -type use yelp-camp (server name)
 -type db.campgrounds.find() to access the seed data
+
+Features:
+- Full CRUD for Campgrounds
+- Maps on the show page
+- Ratings
+- Reviews
+- Authentication
+- Authorization
+- Image upload
+- Cluster map on the index page
