@@ -6,7 +6,7 @@ const map = new mapboxgl.Map({
   zoom: 3,
 });
 
-//map control and compas
+//map control and compass
 map.addControl(new mapboxgl.NavigationControl());
 
 map.on("load", function () {
