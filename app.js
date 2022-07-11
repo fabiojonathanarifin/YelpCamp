@@ -43,11 +43,16 @@ app.use(
 );
 
 const sessionConfig = {
+  //name is overriding default name connect.sid
+  name: "session",
   secret: "thisshouldbeabettersecret!",
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
+    //only for https; means cookie can only be configured over https
+    //the app won't log user in if it's not https
+    // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
