@@ -13,6 +13,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
 
+const helmet = require("helmet");
 //avoid database injection from query
 const mongoSanitize = require("express-mongo-sanitize");
 
@@ -60,6 +61,7 @@ const sessionConfig = {
 //session has to be before passport.session according to passport docs
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(helmet);
 
 app.use(passport.initialize());
 //persistent login session
