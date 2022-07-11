@@ -61,7 +61,7 @@ const sessionConfig = {
 //session has to be before passport.session according to passport docs
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(helmet);
+// app.use(helmet({ contentsSecurityPolicy: false }));
 
 app.use(passport.initialize());
 //persistent login session
