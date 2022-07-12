@@ -21,12 +21,13 @@ const mongoSanitize = require("express-mongo-sanitize");
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
+
+const MongoDBStore = require("connect-mongo")(session);
+
 //mongo atlas database for deployment
+const dbUrl = "mongodb://localhost:27017/yelp-camp";
 // const dbUrl = process.env.DB_URL;
-// "mongodb://localhost:27017/yelp-camp"
-mongoose
-  .connect("mongodb://localhost:27017/yelp-camp")
-  .catch((error) => handleError(error));
+mongoose.connect(dbUrl).catch((error) => handleError(error));
 
 const app = express();
 
@@ -46,7 +47,19 @@ app.use(
   })
 );
 
+const store = new MongoDBStore({
+  url: dbUrl,
+  secret: "thisshouldbeabettersecret!",
+  //express lazy update session; if session is not updated, it is saved after 24 hours
+  touchAfter: 24 * 60 * 60,
+});
+
+store.on("error", function (e) {
+  console.log("SESSION STORE ERROR", e);
+});
+
 const sessionConfig = {
+  store,
   //name is overriding default name connect.sid
   name: "session",
   secret: "thisshouldbeabettersecret!",
@@ -65,8 +78,6 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 //close hacker entrance
-// app.use(helmet());
-
 const scriptSrcUrls = [
   "https://stackpath.bootstrapcdn.com/",
   "https://api.tiles.mapbox.com/",
