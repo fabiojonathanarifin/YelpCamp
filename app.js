@@ -25,8 +25,7 @@ const reviewRoutes = require("./routes/reviews");
 const MongoDBStore = require("connect-mongo")(session);
 
 //mongo atlas database for deployment
-const dbUrl = "mongodb://localhost:27017/yelp-camp";
-// const dbUrl = process.env.DB_URL;
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
 mongoose.connect(dbUrl).catch((error) => handleError(error));
 
 const app = express();
@@ -47,9 +46,12 @@ app.use(
   })
 );
 
+// or is for the dev backup
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
 const store = new MongoDBStore({
   url: dbUrl,
-  secret: "thisshouldbeabettersecret!",
+  secret,
   //express lazy update session; if session is not updated, it is saved after 24 hours
   touchAfter: 24 * 60 * 60,
 });
@@ -62,7 +64,7 @@ const sessionConfig = {
   store,
   //name is overriding default name connect.sid
   name: "session",
-  secret: "thisshouldbeabettersecret!",
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
