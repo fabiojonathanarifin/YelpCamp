@@ -2,7 +2,6 @@
 <div id="cluster-map"></div>
 <div class="container">
     <h1>All Campgrounds</h1>
-
     <% for (let campground of campgrounds){%>
     <div class="card mb-3">
         <div class="row">
@@ -30,7 +29,9 @@
 </div>
 <script>
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
-    const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
+    const campgrounds = {
+        features: < % -JSON.stringify(campgrounds) % >
+    }
 </script>
 
 <script src="/javascripts/clusterMap.js"></script>
