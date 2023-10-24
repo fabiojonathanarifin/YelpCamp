@@ -1,6 +1,6 @@
 const { campgroundSchema, reviewSchema } = require("./schemas.js");
 const ExpressError = require("./utils/ExpressError");
-const Campground = require("./models/campground");
+const Campground = require("./models/campground.js");
 const Review = require("./models/review.js");
 
 //server side validation using Joi for review
